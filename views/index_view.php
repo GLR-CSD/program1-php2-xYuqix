@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="public/css/simple.css">
 </head>
 <body>
-<h1>Personenlijst</h1>
+<h1>Personenlijst akdhfjashnfj</h1>
 <table>
     <tr>
         <th>ID</th>
