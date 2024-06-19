@@ -1,135 +1,134 @@
 <?php
 
+declare(strict_types=1);
 class Album
 {
-    private int $id;
+    private ?int $id;
     private string $naam;
     private string $artiesten;
     private string $release_datum;
     private string $url;
-    private string $afbeeldingen;
+    private string $afbeelding;
     private string $prijs;
+public function __construct(?int $id, string $naam, string $artiesten, string $release_datum, string $url, string $afbeelding, string $prijs)
+{
+    $this->id = $id;
+    $this->naam = $naam;
+    $this->artiesten = $artiesten;
+    $this->release_datum = $release_datum;
+    $this->url = $url;
+    $this->afbeelding = $afbeelding;
+    $this->prijs = $prijs;
+}
 
-    public function __construct(int $id, string $naam, string $artiesten, string $release_datum, string $url, string $afbeeldingen, string $prijs)
-    {
-        $this->id = $id;
-        $this->naam = $naam;
-        $this->artiesten = $artiesten;
-        $this->release_datum = $release_datum;
-        $this->url = $url;
-        $this->afbeeldingen = $afbeeldingen;
-        $this->prijs = $prijs;
+public static function getAll(PDO $db): array
+{
+    $stmt = $db->query("SELECT * FROM album");
+
+    $albums = [];
+
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $album = new Album(
+            $row['id'],
+            $row['naam'],
+            $row['artiesten'],
+            $row['release_datum'],
+            $row['url'],
+            $row['afbeelding'],
+            $row['prijs']
+        );
+        $albums[] = $album;
     }
+    return $albums;
+}
 
-    public static function getAll(PDO $db): array
-    {
-        $stmt = $db->query("Select * from album");
-
-        $albums = [];
-        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-            $album = new Album(
-                $row['id'],
-                $row['naam'],
-                $row['artiesten'],
-                $row['release_datum'],
-                $row['url'],
-                $row['afbeeldingen'],
-                $row['prijs']
-            );
-            $albums[] = $album;
-        }
-        return $albums;
-    }
-
-    public function save(PDO $db): void
-    {
-        $stmt = $db->prepare("INSERT INTO album (naam, artiesten, release_datum, url, afbeeldingen, prijs) VALUES (:naam, :artiesten, :release_datum, :url, :afbeeldingen, :prijs)");
-        $stmt->bindParam(':id', $this->id);
-        $stmt->bindParam(':naam', $this->naam);
-        $stmt->bindParam(':artiesten', $this->artiesten);
-        $stmt->bindParam(':release_datum', $this->release_datum);
-        $stmt->bindParam(':url', $this->url);
-        $stmt->bindParam(':afbeeldingen', $this->afbeeldingen);
-        $stmt->bindParam(':prijs', $this->prijs);
-    }
+public function save(PDO $db): void
+{
+    $stmt = $db->prepare("INSERT INTO album (naam, artiesten, release_datum, url, afbeelding, prijs) VALUES (:naam, :artiesten, :release_datum, :url, :afbeelding, :prijs)");
+    $stmt->bindParam(':naam', $this->naam);
+    $stmt->bindParam(':artiesten', $this->artiesten);
+    $stmt->bindParam(':release_datum', $this->release_datum);
+    $stmt->bindParam(':url', $this->url);
+    $stmt->bindParam(':afbeelding', $this->afbeelding);
+    $stmt->bindParam(':prijs', $this->prijs);
+    $stmt->execute();
+}
 
     public function update(PDO $db): void
     {
-        $stmt = $db->prepare("UPDATE album SET naam = :naam, artiesten = :artiesten, release_datum = :release_datum, url = :url, afbeeldingen = :afbeeldingen, prijs = :prijs WHERE id = :id");
-        $stmt->bindParam(':id', $this->id);
+        // Voorbereiden van de query
+        $stmt = $db->prepare("UPDATE album SET naam = :naam, artiesten = :artiesten, release_datum = :release_datum, url = :url, afbeelding = :afbeelding, prijs = :prijs WHERE id = :id");
         $stmt->bindParam(':naam', $this->naam);
         $stmt->bindParam(':artiesten', $this->artiesten);
         $stmt->bindParam(':release_datum', $this->release_datum);
         $stmt->bindParam(':url', $this->url);
-        $stmt->bindParam(':afbeeldingen', $this->afbeeldingen);
+        $stmt->bindParam(':afbeelding', $this->afbeelding);
         $stmt->bindParam(':prijs', $this->prijs);
+        $stmt->execute();
     }
 
-    public function getId(): int
+public function getId(): int
     {
         return $this->id;
     }
 
-    public function getNaam(): string
+public function getNaam(): string
     {
         return $this->naam;
     }
 
-    public function getArtiesten(): string
+public function getArtiesten(): string
     {
         return $this->artiesten;
     }
 
-    public function getRelease_datum(): string
+public function getRelease_datum(): string
     {
         return $this->release_datum;
     }
 
-    public function getUrl(): string
+public function getUrl(): string
     {
         return $this->url;
     }
 
-    public function getAfbeeldingen(): string
+public function getAfbeelding(): string
     {
-        return $this->afbeeldingen;
+        return $this->afbeelding;
     }
 
-    public function getPrijs(): string
+public function getPrijs(): string
     {
         return $this->prijs;
     }
 
-
-    public function setNaam(string $naam): void
+public function setNaam(string $naam): void
     {
         $this->naam = $naam;
     }
 
-    public function setArtiesten(string $artiesten): void
+public function setArtiesten(string $artiesten): void
     {
-        $this->naam = $artiesten;
+        $this->artiesten = $artiesten;
     }
 
-    public function setRelease_datum(string $release_datum): void
+public function setRelease_datum(string $release_datum): void
     {
-        $this->naam = $release_datum;
+        $this->release_datum = $release_datum;
     }
 
-    public function setUrl(string $url): void
+public function setUrl(string $url): void
     {
-        $this->naam = $url;
+        $this->url = $url;
     }
 
-    public function setAfbeeldingen(string $afbeeldingen): void
+public function setAfbeelding(string $afbeelding): void
     {
-        $this->naam = $afbeeldingen;
+        $this->afbeelding = $afbeelding;
     }
 
-    public function setPrijs(string $prijs): void
+public function setPrijs(string $prijs): void
     {
-        $this->naam = $prijs;
+        $this->prijs = $prijs;
     }
-
-
 }
